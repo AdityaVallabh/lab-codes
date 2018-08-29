@@ -1,4 +1,5 @@
 from copy import deepcopy
+import sys
 
 def get_empty_slot(current):
     n = len(current)
@@ -44,34 +45,48 @@ def print_solution(parent, p):
 def BFS(start, end):
     queue = [start]
     parent = {str(start): None}
-    visited = []
+    visited = [start]
 
     while queue:
         current = queue.pop(0)
-        # print(current)
         if current == end:
             print_solution(parent, end)
             break
-        if current in visited:
-            continue
-            
+        # if current in visited:
+        #     continue
+        
+        # print(current)
         moves = perform_moves(current)
         for move in moves:
             if move not in visited:
                 queue.append(move)
-                # visited.append(move)
+                visited.append(move)
                 parent[str(move)] = current
-        visited.append(current)
+        # visited.append(current)
+
+def DFS(current, end, parent={}, visited=[]):
+    if current == end:
+        print_solution(parent, end)
+        return True
+    moves = perform_moves(current)
+    visited.append(current)
+    for move in moves:
+        if move not in visited:
+            parent[str(move)] = current
+            if DFS(move, end, parent, visited):
+                return True
+    visited.pop()
+    return False
+
 def main():
+    sys.setrecursionlimit(100000)
     start = [[1, 2, 6, 3],[4, 9, 5, 7], [8, 13, 11, 15],[12, 14, 0, 10]]
-    # start = [
-    #     [1, 2, 3],
-    #     [4, 5, 6],
-    #     [7, 0, 8]
-    # ]
     n = len(start)
-    end = [[(i*n+j+1)%(n*n) for j in range(n)] for i in range(n)]
+    end = [[(i*n+j)%(n*n) for j in range(n)] for i in range(n)]
+    print('BFS')
     BFS(start, end)
+    # print('DFS')
+    # DFS(start, end, parent={str(start): None})
 
 if __name__ == '__main__':
     main()
