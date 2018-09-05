@@ -34,6 +34,7 @@ public class parser {
         for(String dataType: dataTypes) {
             // String regex = "[\\s+|;|^]" + dataType + "\\s+";
             String regex = "[\\s+|;]"+dataType+"\\s+([\\**_]?[a-zA-Z0-9\\[\\]]*(\\s*=\\s*[a-zA-Z0-9_\"]*)?)((\\s*,\\s*)([\\**_]?[a-zA-Z0-9\\[\\]]*(\\s*=\\s*[a-zA-Z0-9_\"]*)?))*;";
+            regex = "[\\s|;]"+ dataType +"\\s.*(,.*)*;"; // simpler regex, but still not perfect
             // System.out.println(regex);
             Pattern pattern = Pattern.compile(regex);
             Matcher m = pattern.matcher(code);
@@ -45,6 +46,7 @@ public class parser {
     }
     public static int getCount(String code, String dataType) {
         String regex = "[\\s+|;]"+dataType+"\\s+([\\**_]?[a-zA-Z0-9\\[\\]]*(\\s*=\\s*[a-zA-Z0-9_\"]*)?)((\\s*,\\s*)([\\**_]?[a-zA-Z0-9\\[\\]]*(\\s*=\\s*[a-zA-Z0-9_\"]*)?))*;";
+        regex = "[\\s|;]"+ dataType +"\\s.*(,.*)*;"; // simpler regex, but still not perfect
         String declaration;
         int count;
         // System.out.println(regex);
