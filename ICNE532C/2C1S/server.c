@@ -10,17 +10,11 @@
 #define PORT     8080
 #define MAXLINE 1024
 
-struct node {
-    char host[50];
-    int port;
-};
-
 int main() {
     int sockfd;
     char buffer[MAXLINE];
     char msg[1024];
     struct sockaddr_in servaddr, cliaddr, cliaddr1, cliaddr2;
-    int c1 = 0, c2 = 0;
 
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
      
@@ -48,7 +42,7 @@ int main() {
     printf("%s-%d : %s\n", inet_ntoa(cliaddr2.sin_addr), ntohs(cliaddr2.sin_port), buffer);
 
     sendto(sockfd, (const char *)msg, strlen(msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr1, len);
-    sendto(sockfd, (const char *)msg, strlen(msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
+    // sendto(sockfd, (const char *)msg, strlen(msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr2, len);
     
     while(1) {        
         n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len);
