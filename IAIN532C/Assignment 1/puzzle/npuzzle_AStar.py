@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 from copy import deepcopy
 import sys
 
@@ -77,6 +78,7 @@ def A_Star(initial):
         closed_list.append(current)
 
         if current.is_solved():
+            print('Nodes: ' + str(len(open_list)))
             return current
 
         moves = perform_all_moves(current)
@@ -113,11 +115,27 @@ def print_solution(puzzle):
     moves = print_solution(puzzle.parent) + 1
     pp(puzzle.board)
     return moves
-# board = [[2,3,6],[0,1,8],[4,5,7]]
+board = [[2,3,6],[0,1,8],[4,5,7]]
 # board = [[5,2,8],[4,1,7],[0,3,6]]
 # board = [[0,1,2],[3,4,5],[6,7,8]]
-board = [[1,2,0],[3,4,5],[6,7,8]]
+# board = [[1,2,0],[3,4,5],[6,7,8]]
 
+# a star
+board = [
+    [4,0,1,2],
+    [8,6,7,3],
+    [12,15,9,11],
+    [13,5,10,14]
+]
+
+board = [
+        [1,4,15,3],
+        [0,5,2,7],
+        [8,9,6,10],
+        [12,13,14,11]
+    ]
+
+# board = [[1, 2, 6, 3],[4, 9, 5, 7], [8, 13, 11, 15],[12, 14, 0, 10]]
 initial = Puzzle(board, None)
 result = A_Star(initial)
 moves = print_solution(result)

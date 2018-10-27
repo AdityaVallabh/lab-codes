@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 from copy import deepcopy
 import sys
 
@@ -5,7 +6,7 @@ def get_empty_slot(current):
     n = len(current)
     for i in range(n):
         for j in range(n):
-            if current[i][j] == 0:
+            if current[i][j] == n*n - 1:#0:
                 return i, j
 
 def perform_moves(current):
@@ -39,8 +40,10 @@ def print_solution(parent, p):
     while p:
         path.append(p)
         p = parent[str(p)]
+    l = len(path)
     while path:
         pp(path.pop())
+    return l
 
 def BFS(start, end):
     queue = [start]
@@ -50,7 +53,9 @@ def BFS(start, end):
     while queue:
         current = queue.pop(0)
         if current == end:
-            print_solution(parent, end)
+            l = print_solution(parent, end)
+            print('Moves: ' + str(l))
+            print('Nodes: ' + str(len(visited)))
             break
         # if current in visited:
         #     continue
@@ -81,6 +86,13 @@ def DFS(current, end, parent={}, visited=[]):
 def main():
     sys.setrecursionlimit(100000)
     start = [[1, 2, 6, 3],[4, 9, 5, 7], [8, 13, 11, 15],[12, 14, 0, 10]]
+    
+    start = [
+        [1,4,15,3],
+        [0,5,2,7],
+        [8,9,6,10],
+        [12,13,14,11]
+    ]
     n = len(start)
     end = [[(i*n+j)%(n*n) for j in range(n)] for i in range(n)]
     print('BFS')

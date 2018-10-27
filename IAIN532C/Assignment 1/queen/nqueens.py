@@ -34,7 +34,6 @@ def DFS(board, i, n):
 
 def BFS(board, n):
     queue = [(board,0)]
-    q = []
 
     while queue:
         board, i = queue.pop(0)
