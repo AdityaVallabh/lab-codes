@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
+from matplotlib import pyplot as plt
 
 class MNIST_Model:
     def __init__(self):
@@ -15,14 +16,21 @@ class MNIST_Model:
         x = tf.placeholder(tf.float32, shape=[None, 784])
         y = tf.placeholder(tf.float32, shape=[None, 10])
 
-        W = tf.Variable(tf.zeros([784, 10]))
-        b = tf.Variable(tf.zeros([10]))
+        W1 = tf.Variable(tf.random_normal([784, 50], stddev=.1))
+        b1 = tf.Variable(tf.random_normal([50], stddev=.1))
+        hidden = tf.nn.relu(tf.add(tf.matmul(x, W1), b1))
 
-        y_ = tf.nn.softmax(tf.add(tf.matmul(x, W), b))
+        W2 = tf.Variable(tf.random_normal([50, 10], stddev=.1))
+        b2 = tf.Variable(tf.random_normal([10], stddev=.1))
+        y_ = tf.nn.softmax(tf.add(tf.matmul(hidden, W2), b2))
 
         loss = tf.reduce_mean(-tf.reduce_sum((y * tf.log(y_)), axis=1))
         train = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
+        # y_ = tf.matmul(hidden, W) + b
+        # loss = tf.losses.softmax_cross_entropy(y, y_)
+        # train = tf.train.AdamOptimizer().minimize(loss)
+        
         prediction = tf.equal(tf.argmax(y_, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(prediction, tf.float32))
 
@@ -33,14 +41,18 @@ class MNIST_Model:
                 batch_x, batch_y = self.mnist.train.next_batch(batch_size)
                 _, acc = sess.run([train, accuracy], feed_dict={x: batch_x, y: batch_y})
                 print('Batch {}/{}: {}'.format(num, batches, acc))
-            self.W, self.b = sess.run([W, b])
+            self.W1, self.b1, self.W2, self.b2 = sess.run([W1, b1, W2, b2])
             self.accuracy = self._accuracy()
 
     def predict(self, batch_x):
         x = tf.placeholder(tf.float32, shape=[None, 784])
-        W = self.W
-        b = self.b
-        y_ = tf.nn.softmax(tf.add(tf.matmul(x, W), b))
+        W1 = self.W1
+        b1 = self.b1
+        hidden = tf.nn.relu(tf.add(tf.matmul(x, W1), b1))
+        
+        W2 = self.W2
+        b2 = self.b2
+        y_ = tf.nn.softmax(tf.add(tf.matmul(hidden, W2), b2))
 
         init = tf.global_variables_initializer()
         with tf.Session() as sess:
@@ -57,3 +69,11 @@ class MNIST_Model:
 model = MNIST_Model()
 model.train()
 print('Accuracy: {}'.format(model.accuracy))
+
+x = model.mnist.test.images[:9]
+y = model.predict(x)
+print(y)
+for i,im in zip(range(len(x)),x):
+    plt.subplot(3, 3, i+1)
+    plt.imshow(im.reshape(28,28))
+plt.show()
