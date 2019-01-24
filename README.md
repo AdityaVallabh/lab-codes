@@ -1,2 +1,2 @@
-# Semester-5
+# lab-codes
 Lab Codes
