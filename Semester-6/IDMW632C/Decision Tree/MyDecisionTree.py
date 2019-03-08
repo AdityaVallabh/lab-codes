@@ -18,6 +18,18 @@ class Node:
         for child in self.children:
             print('\t'*level + str(child))
             self.children[child].print_tree(cols, level+1)
+     
+     def print_rules(self, cols, rule ,level=0):
+        if self.leaf:
+            rule = rule[:-4]
+            rule += "THEN " + str(self.attr)
+            print(rule)
+        else:
+            rule += "IF " + str(cols[self.attr]) +" IS "
+        for child in self.children:
+            rule+= str(child) + " AND "
+            self.children[child].print_rules(cols, rule, level+1)
+            rule = rule[:-len(str(child) + " AND ")] 
 
 def get_info(data):
     ps = {}
