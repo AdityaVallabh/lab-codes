@@ -19,17 +19,17 @@ class Node:
             print('\t'*level + str(child))
             self.children[child].print_tree(cols, level+1)
      
-     def print_rules(self, cols, rule ,level=0):
+    def print_rules(self, cols, rule='', level=0):
         if self.leaf:
             rule = rule[:-4]
-            rule += "THEN " + str(self.attr)
+            rule += 'THEN ' + str(self.attr)
             print(rule)
         else:
-            rule += "IF " + str(cols[self.attr]) +" IS "
+            rule += 'IF ' + str(cols[self.attr]) + ' IS '
         for child in self.children:
-            rule+= str(child) + " AND "
+            rule+= str(child) + ' AND '
             self.children[child].print_rules(cols, rule, level+1)
-            rule = rule[:-len(str(child) + " AND ")] 
+            rule = rule[:-len(str(child) + ' AND ')] 
 
 def get_info(data):
     ps = {}
@@ -58,7 +58,7 @@ def id3_c45(data, attrs, algo='id3'):
         gain = info - info_attr
         gain_ratio = gain/split_ratio
         curr = gain_ratio if algo == 'c4.5' else gain
-        if max_gain < curr:
+        if max_gain <= curr:
             max_gain = curr
             split, tuples = attr, tups
     return split, tuples
